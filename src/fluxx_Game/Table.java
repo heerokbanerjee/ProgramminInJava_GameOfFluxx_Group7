@@ -9,6 +9,7 @@ import fluxx_Cards.Card;
 import fluxx_Cards.Goal;
 import fluxx_Cards.Keeper;
 import fluxx_Cards.Rule;
+import fluxx_Players.Player;
 
 /**
  * @author hermes
@@ -21,6 +22,10 @@ public class Table {
 	 */
 	public int deckSize;
 	public ArrayList<Card> Deck;
+	
+	public int playsLeft;
+	public int drawsLeft;
+	
 	public Rule currentRule;
 	public Goal currentGoal;
 	public ArrayList<Keeper> currentKeepers;

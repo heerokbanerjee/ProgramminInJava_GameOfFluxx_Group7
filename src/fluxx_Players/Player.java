@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author hermes
  *
  */
-public class Player {
+public class Player implements inputHandler {
 	
 /*
  * **************** GENERIC ATTRIBUTES OF A PLAYER *********************	
