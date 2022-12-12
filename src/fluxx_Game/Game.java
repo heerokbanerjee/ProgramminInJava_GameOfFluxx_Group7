@@ -4,6 +4,8 @@
 package fluxx_Game;
 
 import java.util.ArrayList;
+
+import fluxx_Cards.Card;
 import fluxx_Cards.Keeper;
 import fluxx_Players.Player;
 
@@ -11,7 +13,7 @@ import fluxx_Players.Player;
  * @author hermes
  *
  */
-public class Game {
+public class Game implements gameInterface {
 	
 	
 	ArrayList<Player> allPlayers;
@@ -81,6 +83,55 @@ public class Game {
 	}
 	
 	/*
+	 * **************** Interface Implementation ************************
+	 */
+	
+	
+	
+	@Override
+	public void playCard(Card thisCard) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void showKeepers(Table thisTable) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void showRules(Table thisTable) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void showGoals(Table thisTable) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean updateRules(Table thisTable) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void nextTurn(Game thisGame) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void checkWinner(Game thisGame) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	/*
 	 * **************** START OF GAME ************************
 	 */
 	
@@ -92,6 +143,7 @@ public class Game {
 		// TODO Auto-generated method stub
 
 	}
+
 
 
 }

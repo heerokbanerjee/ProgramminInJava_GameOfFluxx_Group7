@@ -4,6 +4,7 @@
 package fluxx_Game;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import fluxx_Cards.Card;
 import fluxx_Cards.Goal;
@@ -21,7 +22,7 @@ public class Table {
 	 * **************** GENERIC ATTRIBUTES OF TABLE ************************
 	 */
 	int deckSize;
-	ArrayList<Card> Deck;
+	Stack<Card> Deck;
 	
 	int playsLeft;
 	int drawsLeft;
@@ -29,7 +30,7 @@ public class Table {
 	Rule currentRule;
 	Goal currentGoal;
 	ArrayList<Keeper> currentKeepers;
-	ArrayList<Card> discardedCards;
+	Stack<Card> discardedCards;
 	
 	
 
@@ -57,7 +58,7 @@ public class Table {
 	/**
 	 * @return the deck
 	 */
-	public ArrayList<Card> getDeck() {
+	public Stack<Card> getDeck() {
 		return Deck;
 	}
 
@@ -65,7 +66,7 @@ public class Table {
 	/**
 	 * @param deck the deck to set
 	 */
-	public void setDeck(ArrayList<Card> deck) {
+	public void setDeck(Stack<Card> deck) {
 		Deck = deck;
 	}
 
@@ -153,7 +154,7 @@ public class Table {
 	/**
 	 * @return the discardedCards
 	 */
-	public ArrayList<Card> getDiscardedCards() {
+	public Stack<Card> getDiscardedCards() {
 		return discardedCards;
 	}
 
@@ -161,7 +162,7 @@ public class Table {
 	/**
 	 * @param discardedCards the discardedCards to set
 	 */
-	public void setDiscardedCards(ArrayList<Card> discardedCards) {
+	public void setDiscardedCards(Stack<Card> discardedCards) {
 		this.discardedCards = discardedCards;
 	}
 
@@ -169,24 +170,43 @@ public class Table {
 	/*
 	 * **************** UTILITY FUNCTIONS ************************
 	 */
-
-	public ArrayList<Card> shuffleDeck(ArrayList<Card> thisDeck){
-		//To implement algorithm to shuffle a given deck
-		return null;
+	
+	public int getRandomPosition(int min, int max) {
+	    return (int) ((Math.random() * (max - min)) + min);
+	}
+	
+	public Stack<Card> shuffleDeck(Stack<Card> discarded){
+		
+		//To implement algorithm to randomly shuffle a given deck
+		int deckSize=discarded.size();
+		for(int i=0;i< deckSize/2;i++) {
+			
+			int pos1=getRandomPosition(0,deckSize-1);		int pos2=getRandomPosition(0,deckSize-1);
+			
+			Card card1=this.getDeck().remove(pos1);			Card card2=this.getDeck().remove(pos2);
+			
+			this.getDeck().add(pos1, card2);				this.getDeck().add(pos2,card1);
+			
+		}
+		return this.getDeck();
 	}
 	
 	
-	public void resetDeck(ArrayList<Card> discarded, ArrayList<Card> current) {
-		//To implement
+	public Stack<Card> resetDeck(Stack<Card> discarded, Stack<Card> current) {
+		return current=shuffleDeck(discarded);
 	}
 	
 	
 	public void discard(Card thisCard){
-		//To implement
+		this.getDiscardedCards().add(thisCard);
 	}
 	
-	public void dealCards(ArrayList<Card> currentDeck, int num_cards, Player thisPlayer) {
-		//To implement
+	public void dealCards(Stack<Card> currentDeck, int num_cards, Player thisPlayer) {
+		for(int i=0;i<num_cards;i++) {thisPlayer.getMyHand().add(currentDeck.pop());}
+	}
+	
+	public void dealCards(int index, ArrayList<Card> currentDeck, Player thisPlayer) {
+		thisPlayer.getMyHand().add(currentDeck.get(index));
 	}
 	
 }
