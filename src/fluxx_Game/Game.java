@@ -6,7 +6,9 @@ package fluxx_Game;
 import java.util.ArrayList;
 
 import fluxx_Cards.Card;
+import fluxx_Cards.Goal;
 import fluxx_Cards.Keeper;
+import fluxx_Cards.Rule;
 import fluxx_Players.Player;
 
 /**
@@ -92,6 +94,18 @@ public class Game implements gameInterface {
 	public void playCard(Card thisCard) {
 		// TODO Auto-generated method stub
 		
+		if (thisCard instanceof Rule) {
+			//To implement
+		}
+		
+		else if (thisCard instanceof Keeper) {
+			//To implement
+		}
+		
+		else if (thisCard instanceof Goal) {
+			//To implement
+		}
+		
 	}
 
 	@Override
@@ -121,7 +135,8 @@ public class Game implements gameInterface {
 	@Override
 	public void nextTurn(Game thisGame) {
 		// TODO Auto-generated method stub
-		
+		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(thisGame.getAllPlayers().indexOf(currentPlayer)+1));
+		return;
 	}
 
 	@Override

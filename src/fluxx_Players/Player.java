@@ -5,6 +5,7 @@ package fluxx_Players;
 
 import fluxx_Cards.Card;
 import fluxx_Cards.Keeper;
+import fluxx_Game.Game;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ public class Player implements inputHandler {
 
 int playerID;
 String playerName;
+Game myGame;
 ArrayList<Card> myHand;
 ArrayList<Keeper> myKeepers; // keepers placed in table
 
@@ -114,14 +116,17 @@ public void handleInput(String input){
 	
 	//Show Hand
 	if(input.matches("[S|s]how.*[H|h]and.*")) {
+		showHand();
 	}
 	
 	//Show Keepers
 	if(input.matches("[S|s]how.*[K|k]eeper.*")) {
+		showKeepers();
 	}
 	
 	//Play Card
 	if(input.matches("[P|p]lay.*[C|c]ard.*")) {
+
 	}
 		
 }
