@@ -9,7 +9,7 @@ package fluxx_Cards;
  */
 public abstract class Card {
 
-	int cardID;
+	public int cardID;
 
 	/**
 	 * @return the cardID

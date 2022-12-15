@@ -198,7 +198,7 @@ public class Table {
 	
 	
 	public void discard(Card thisCard){
-		this.getDiscardedCards().add(thisCard);
+		this.getDiscardedCards().push(thisCard);
 	}
 	
 	public void dealCards(Stack<Card> currentDeck, int num_cards, Player thisPlayer) {
