@@ -26,7 +26,7 @@ public class Game implements gameInterface, inputHandler {
 	
 	
 	private ArrayList<Player> allPlayers;
-	private ArrayList<Table> table;
+	private ArrayList<Table> tables;
 	private Player currentPlayer;
 	
 	/*
@@ -34,7 +34,7 @@ public class Game implements gameInterface, inputHandler {
 	 */
 	public Game() {
 		this.setAllPlayers(new ArrayList<Player>());
-		this.setTable(new ArrayList<Table>());
+		this.setTables(new ArrayList<Table>());
 		this.setCurrentPlayer(null);
 	}
 	/*
@@ -66,15 +66,15 @@ public class Game implements gameInterface, inputHandler {
 	/**
 	 * @return the table
 	 */
-	public ArrayList<Table> getTable() {
-		return table;
+	public ArrayList<Table> getTables() {
+		return tables;
 	}
 
 	/**
 	 * @param table the table to set
 	 */
-	public void setTable(ArrayList<Table> table) {
-		this.table = table;
+	public void setTables(ArrayList<Table> table) {
+		this.tables = table;
 	}
 
 	/**
@@ -242,29 +242,29 @@ public class Game implements gameInterface, inputHandler {
 		thisGame.addPlayer(new Player("Simon",thisGame));
 		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(0));
 		
-		thisGame.getTable().get(0).initTable(thisGame,"res/allKeepers.txt");
+		thisGame.getTables().add(new Table());
+		thisGame.getTables().get(0).initTable(thisGame,"res/allKeepers.txt");
 		//System.out.print(thisGame.getTable().getDeck());
 		
 		// player 1 draws 3 cards
-		thisGame.getTable().get(0).dealCards(thisGame.getTable().get(0).getDeck(), 3, thisGame.getCurrentPlayer());
+		thisGame.getTables().get(0).dealCards(thisGame.getTables().get(0).getDeck(), 3, thisGame.getCurrentPlayer());
 		
-		//System.out.print(thisGame.getCurrentPlayer().getMyHand());
+		System.out.print(thisGame.getCurrentPlayer().getMyHand());
 		
 		// player 1 discards card number 2
 		Card abc= thisGame.getCurrentPlayer().getMyHand().remove(2);
-		thisGame.getTable().get(0).discard(abc);
+		thisGame.getTables().get(0).discard(abc);
 		
 		
-		System.out.print(thisGame.getTable().get(0).getDiscardedCards());
+		//System.out.print(thisGame.getTable().get(0).getDiscardedCards());
 		
 		
 		//******************** Gameplay *****************************
 		//System.out.println("Enter the number of players: ");
 		//int num_players = ns.nextInt();
 
-		//thisGame.getTable().initTable(thisGame);
 		
-		while(thisGame.checkWinner(thisGame.getTable().get(0))==null){
+		while(thisGame.checkWinner(thisGame.getTables().get(0))==null){
 			String input = ns.next();
 			thisGame.handleInput(input);
 			
