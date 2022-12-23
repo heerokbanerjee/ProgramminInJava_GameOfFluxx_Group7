@@ -3,7 +3,11 @@
  */
 package fluxx_Game;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 import fluxx_Cards.Card;
@@ -21,16 +25,16 @@ public class Table {
 	/*
 	 * **************** GENERIC ATTRIBUTES OF TABLE ************************
 	 */
-	int deckSize;
-	Stack<Card> Deck;
+	private int deckSize;
+	private Stack<Card> Deck;
 	
-	int playsLeft;
-	int drawsLeft;
+	public int playsLeft;
+	public int drawsLeft;
 	
-	Rule currentRule;
-	Goal currentGoal;
-	ArrayList<Keeper> currentKeepers;
-	Stack<Card> discardedCards;
+	private Rule currentRule;
+	private Goal currentGoal;
+	private HashMap<Player,Keeper> currentKeepers;
+	private Stack<Card> discardedCards;
 	
 	
 
@@ -138,7 +142,7 @@ public class Table {
 	/**
 	 * @return the currentKeepers
 	 */
-	public ArrayList<Keeper> getCurrentKeepers() {
+	public HashMap<Player, Keeper> getCurrentKeepers() {
 		return currentKeepers;
 	}
 
@@ -146,7 +150,7 @@ public class Table {
 	/**
 	 * @param currentKeepers the currentKeepers to set
 	 */
-	public void setCurrentKeepers(ArrayList<Keeper> currentKeepers) {
+	public void setCurrentKeepers(HashMap<Player, Keeper> currentKeepers) {
 		this.currentKeepers = currentKeepers;
 	}
 
@@ -175,20 +179,20 @@ public class Table {
 	    return (int) ((Math.random() * (max - min)) + min);
 	}
 	
-	public Stack<Card> shuffleDeck(Stack<Card> discarded){
+	public Stack<Card> shuffleDeck(Stack<Card> thisDeck){
 		
 		//To implement algorithm to randomly shuffle a given deck
-		int deckSize=discarded.size();
+		int deckSize=thisDeck.size();
 		for(int i=0;i< deckSize/2;i++) {
 			
 			int pos1=getRandomPosition(0,deckSize-1);		int pos2=getRandomPosition(0,deckSize-1);
 			
-			Card card1=this.getDeck().remove(pos1);			Card card2=this.getDeck().remove(pos2);
+			Card card1=thisDeck.remove(pos1);				Card card2=thisDeck.remove(pos2);
 			
-			this.getDeck().add(pos1, card2);				this.getDeck().add(pos2,card1);
+			thisDeck.add(pos1, card2);						thisDeck.add(pos2,card1);
 			
 		}
-		return this.getDeck();
+		return thisDeck;
 	}
 	
 	
@@ -207,6 +211,29 @@ public class Table {
 	
 	public void dealCards(int index, ArrayList<Card> currentDeck, Player thisPlayer) {
 		thisPlayer.getMyHand().add(currentDeck.get(index));
+	}
+	
+	
+	/*
+	 * **************** INIT FUNCTIONS ************************
+	 */
+	
+	public Table initTable(Game thisGame) throws IOException {
+		
+		/*
+		 * **************** Fetching All keeper Cards ************************
+		 */
+		
+		try (BufferedReader br = new BufferedReader(new FileReader("res/allKeepers.txt"))) {
+			   String keeperName;
+			   while ((keeperName = br.readLine()) != null) {
+				   Keeper newKeeper = new Keeper();
+				   newKeeper.setItem(keeperName);
+				   thisGame.getTable().getDeck().push(newKeeper);
+			   }
+			}
+		
+		return null;
 	}
 	
 }

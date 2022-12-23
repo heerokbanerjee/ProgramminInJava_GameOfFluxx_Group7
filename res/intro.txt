@@ -1,0 +1,7 @@
+*********** Welcome to the Game of Fluxx ***************
+*****
+*****     This game is a text-based version of the classical card game 'Fluxx'.
+*****     There are 3 types of cards in this game: 
+*****     (1) Rule Cards : 
+*****     (2) Goal Cards :
+*****     (3) Keeper Cards :
