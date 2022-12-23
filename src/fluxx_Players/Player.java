@@ -6,14 +6,17 @@ package fluxx_Players;
 import fluxx_Cards.Card;
 import fluxx_Cards.Keeper;
 import fluxx_Game.Game;
+import fluxx_Game.inputHandler;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * @author hermes
  *
  */
-public class Player implements inputHandler {
+public class Player{
 		
 	static int num_ID=0;	
 	/*
@@ -114,7 +117,7 @@ public class Player implements inputHandler {
 		//To implement	
 	}
 	
-	private ArrayList<Card> showHand(){
+	public ArrayList<Card> showHand(){
 		
 		//   [1] : Keeper Card -- > Ghoda
 		//   [2] : Rule Card --> keeper limit 2
@@ -130,38 +133,7 @@ public class Player implements inputHandler {
 	public void playCard(int position) {
 		//To implement
 		Card selectedCard = this.getMyHand().remove(position);
-		myGame.playCard(selectedCard);
+		this.getMyGame().playCard(selectedCard);
 	}
-	
-	/*
-	 * **************** To Handle User Input *********************	
-	 */
-	
-	public void handleInput(String input){
 		
-		String[] commands = input.split(" ");
-		
-		//Show help
-		if(input.matches("[H|h]elp.*")) {
-			System.out.print("blablabla");
-		}
-		
-		//Show Hand
-		if(input.matches("[S|s]how.*[H|h]and.*")) {
-			showHand();
-		}
-		
-		//Show Keepers
-		if(input.matches("[S|s]how.*[K|k]eeper.*")) {
-			showKeepers();
-		}
-		
-		//Play Card
-		if(input.matches("[P|p]lay.*[C|c]ard.*")) {
-			
-		}
-			
-	}
-
-	
 }

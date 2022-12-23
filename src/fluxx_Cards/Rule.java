@@ -32,6 +32,5 @@ public class Rule extends Card {
 		this.playLimit = playLimit;
 	}
 	
-	
 }
 

@@ -22,12 +22,11 @@ import fluxx_Players.Player;
  * @author hermes
  *
  */
-public class Game implements gameInterface {
+public class Game implements gameInterface, inputHandler {
 	
 	
 	private ArrayList<Player> allPlayers;
-	private HashMap<Integer,Keeper> allKeepers;
-	private Table table;
+	private ArrayList<Table> table;
 	private Player currentPlayer;
 	
 	/*
@@ -35,8 +34,7 @@ public class Game implements gameInterface {
 	 */
 	public Game() {
 		this.setAllPlayers(new ArrayList<Player>());
-		this.setAllKeepers(new HashMap<Integer,Keeper>());
-		this.setTable(new Table());
+		this.setTable(new ArrayList<Table>());
 		this.setCurrentPlayer(null);
 	}
 	/*
@@ -66,30 +64,16 @@ public class Game implements gameInterface {
 	}
 
 	/**
-	 * @return the allKeepers
-	 */
-	public HashMap<Integer,Keeper> getAllKeepers() {
-		return allKeepers;
-	}
-
-	/**
-	 * @param allKeepers the allKeepers to set
-	 */
-	public void setAllKeepers(HashMap<Integer, Keeper> allKeepers) {
-		this.allKeepers = allKeepers;
-	}
-
-	/**
 	 * @return the table
 	 */
-	public Table getTable() {
+	public ArrayList<Table> getTable() {
 		return table;
 	}
 
 	/**
 	 * @param table the table to set
 	 */
-	public void setTable(Table table) {
+	public void setTable(ArrayList<Table> table) {
 		this.table = table;
 	}
 
@@ -107,17 +91,17 @@ public class Game implements gameInterface {
 		this.currentPlayer = currentPlayer;
 	}
 	
+	
 	/*
 	 * **************** Interface Implementation ************************
 	 */
-	
-	
 	@Override
 	public void playCard(Card thisCard) {
 		// TODO Auto-generated method stub
 		
 		if (thisCard instanceof Rule) {
 			//To implement
+			
 		}
 		
 		else if (thisCard instanceof Keeper) {
@@ -128,6 +112,9 @@ public class Game implements gameInterface {
 			//To implement
 		}
 		
+		// check if plays left
+		
+		
 	}
 
 	@Override
@@ -135,7 +122,7 @@ public class Game implements gameInterface {
 		// TODO Auto-generated method stub
 		System.out.println("------ All Keeper Cards on the Table -------");
 		
-		for(Player thisPlayer: thisTable.getCurrentKeepers().keySet()) {
+		for(Player thisPlayer: this.getAllPlayers()) {
 			System.out.print(thisPlayer.getPlayerName()+":: ");
 			System.out.print(thisPlayer.getMyKeepers());
 		}
@@ -174,6 +161,9 @@ public class Game implements gameInterface {
 		// TODO Auto-generated method stub
 		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(thisGame.getAllPlayers().indexOf(currentPlayer)+1));
 		//TO:DO initialize play_left + draws_left
+		
+		// check for hand limit and check for keeper limit
+		// ask current player to discard cards
 		return;
 	}
 
@@ -195,7 +185,38 @@ public class Game implements gameInterface {
 	
 	
 	/*
-	 * **************** START OF GAME ************************
+	 * **************** Input Handler Implementation *********************	
+	 */
+	
+	public void handleInput(String input) throws FileNotFoundException, IOException{
+		
+		String[] commands = input.split(" ");
+		
+		//Show help
+		if(input.matches("[H|h]elp.*")) {
+			this.printFile("res/help.txt");
+		}
+		
+		//Show Hand
+		if(input.matches("[S|s]how.*[H|h]and.*")) {
+			this.getCurrentPlayer().showHand();
+		}
+		
+		//Show Keepers
+		if(input.matches("[S|s]how.*[K|k]eeper.*")) {
+			this.getCurrentPlayer().showKeepers();
+		}
+		
+		//Play Card
+		if(input.matches("[P|p]lay.*[C|c]ard.*")) {
+			
+		}
+			
+	}
+	
+	
+	/*
+	 * **************** TEST GAME (To be removed) ************************
 	 */
 	
 	/**
@@ -221,16 +242,31 @@ public class Game implements gameInterface {
 		thisGame.addPlayer(new Player("Simon",thisGame));
 		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(0));
 		
+		thisGame.getTable().get(0).initTable(thisGame,"res/allKeepers.txt");
+		//System.out.print(thisGame.getTable().getDeck());
+		
+		// player 1 draws 3 cards
+		thisGame.getTable().get(0).dealCards(thisGame.getTable().get(0).getDeck(), 3, thisGame.getCurrentPlayer());
+		
+		//System.out.print(thisGame.getCurrentPlayer().getMyHand());
+		
+		// player 1 discards card number 2
+		Card abc= thisGame.getCurrentPlayer().getMyHand().remove(2);
+		thisGame.getTable().get(0).discard(abc);
+		
+		
+		System.out.print(thisGame.getTable().get(0).getDiscardedCards());
+		
 		
 		//******************** Gameplay *****************************
 		//System.out.println("Enter the number of players: ");
 		//int num_players = ns.nextInt();
-	
+
 		//thisGame.getTable().initTable(thisGame);
 		
-		while(thisGame.checkWinner(thisGame.getTable())==null){
+		while(thisGame.checkWinner(thisGame.getTable().get(0))==null){
 			String input = ns.next();
-			thisGame.getCurrentPlayer().handleInput(input);
+			thisGame.handleInput(input);
 			
 		}
 		

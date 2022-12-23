@@ -33,8 +33,13 @@ public class Table {
 	
 	private Rule currentRule;
 	private Goal currentGoal;
-	private HashMap<Player,Keeper> currentKeepers;
+	private ArrayList<Keeper> allKeepers;
 	private Stack<Card> discardedCards;
+	
+	public Table() {
+		this.setDeck(new Stack<Card>());
+		this.setDiscardedCards(new Stack<Card>());
+	}
 	
 	
 
@@ -138,21 +143,22 @@ public class Table {
 		this.currentGoal = currentGoal;
 	}
 
-
 	/**
-	 * @return the currentKeepers
+	 * @return the allKeepers
 	 */
-	public HashMap<Player, Keeper> getCurrentKeepers() {
-		return currentKeepers;
+	public ArrayList<Keeper> getAllKeepers() {
+		return allKeepers;
 	}
 
 
+
 	/**
-	 * @param currentKeepers the currentKeepers to set
+	 * @param allKeepers the allKeepers to set
 	 */
-	public void setCurrentKeepers(HashMap<Player, Keeper> currentKeepers) {
-		this.currentKeepers = currentKeepers;
+	public void setAllKeepers(ArrayList<Keeper> allKeepers) {
+		this.allKeepers = allKeepers;
 	}
+
 
 
 	/**
@@ -218,21 +224,44 @@ public class Table {
 	 * **************** INIT FUNCTIONS ************************
 	 */
 	
-	public Table initTable(Game thisGame) throws IOException {
+	public Table initTable(Game thisGame, String filename) throws IOException {
 		
 		/*
 		 * **************** Fetching All keeper Cards ************************
 		 */
 		
-		try (BufferedReader br = new BufferedReader(new FileReader("res/allKeepers.txt"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			   String keeperName;
 			   while ((keeperName = br.readLine()) != null) {
 				   Keeper newKeeper = new Keeper();
 				   newKeeper.setItem(keeperName);
-				   thisGame.getTable().getDeck().push(newKeeper);
+				   this.getDeck().push(newKeeper);
 			   }
 			}
 		
+		/*
+		 * **************** Generating  Rule Cards ************************
+		 */
+		
+		/*
+		 * **************** Generating  Goals Cards ************************
+		 */
+		
+		
+		
+		/*
+		 * **************** Shuffling Deck x 5 times ************************
+		 */
+		
+		
+		
+		/*
+		 * **************** Basic Rule Card ************************
+		 */
+		
+		
+		
+
 		return null;
 	}
 	
