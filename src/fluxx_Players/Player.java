@@ -18,24 +18,30 @@ import java.util.ArrayList;
  */
 public class Player{
 		
-	static int num_ID=0;	
+	static int num_ID=1;	
 	/*
 	 * **************** GENERIC ATTRIBUTES OF A PLAYER *********************	
 	 */
 	
 	private int playerID;
 	private String playerName;
-	private Game myGame;
 	private ArrayList<Card> myHand;
 	private ArrayList<Keeper> myKeepers; // keepers placed in table
 	
 	/*
 	 * **************** CONSTRUCTOR *********************	
 	 */
-	public Player(String Name, Game thisGame) {
+	public Player() {
 		this.setPlayerID(Player.num_ID++);
-		this.setPlayerName(Name);
-		this.setMyGame(thisGame);
+		this.setPlayerName("");
+		this.setMyHand(new ArrayList<Card>());
+		this.setMyKeepers(new ArrayList<Keeper>());
+	}
+	
+	//Parameterized Constructor
+	public Player(String name) {
+		this.setPlayerID(Player.num_ID++);
+		this.setPlayerName(name);
 		this.setMyHand(new ArrayList<Card>());
 		this.setMyKeepers(new ArrayList<Keeper>());
 	}
@@ -56,20 +62,7 @@ public class Player{
 	public void setPlayerID(int playerID) {
 		this.playerID = playerID;
 	}
-	/**
-	 * @return the myGame
-	 */
-	public Game getMyGame() {
-		return myGame;
-	}
-	
-	/**
-	 * @param myGame the myGame to set
-	 */
-	public void setMyGame(Game myGame) {
-		this.myGame = myGame;
-	}
-	
+
 	/**
 	 * @return the playerName
 	 */
@@ -113,27 +106,35 @@ public class Player{
 	 * 
 	 */
 	
-	public void getPlayerDetails() {
-		//To implement	
-	}
 	
 	public ArrayList<Card> showHand(){
 		
-		//   [1] : Keeper Card -- > Ghoda
-		//   [2] : Rule Card --> keeper limit 2
-		//To implement
-		return null;
+		System.out.println(" >> You have the following cards in your hand:");
+		System.out.println("-----------------------------");
+		for(int i =0; i< this.getMyHand().size();i++) {
+			System.out.println("(Card#"+(i+1)+") --> "+this.getMyHand().get(i));
+			System.out.println("-----------------------------");
+		}
+		return this.getMyHand();
 	}
 	
 	public ArrayList<Keeper> showKeepers(){
-		//To implement
-		return null;
+		
+		if(this.getMyKeepers().size()==0) {System.out.println(" >> You have no Keeper cards in the table!");}
+		else {
+			System.out.println(" >> You have the following Keeper cards in table:");
+			System.out.println("-----------------------------");
+			for(int i =0; i< this.getMyKeepers().size();i++) {
+				System.out.println((i+1)+" --> "+this.getMyKeepers().get(i));
+				System.out.println("-----------------------------");
+			}
+		}
+		return this.getMyKeepers();
 	}
 	
 	public void playCard(int position) {
 		//To implement
 		Card selectedCard = this.getMyHand().remove(position);
-		this.getMyGame().playCard(selectedCard);
 	}
 		
 }

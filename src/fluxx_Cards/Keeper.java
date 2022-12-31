@@ -16,8 +16,8 @@ public class Keeper extends Card {
 
 	@Override
 	public String toString() {
-	    StringJoiner keeperCard = new StringJoiner("\n");
-	    keeperCard.add("****** Keeper Card ******");
+	    StringJoiner keeperCard = new StringJoiner("");
+	    keeperCard.add("[Keeper Card] :: ");
 	    keeperCard.add(this.getItem().toString());
 		return keeperCard.toString();
 	}

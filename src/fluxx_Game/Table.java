@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Stack;
 
 import fluxx_Cards.Card;
@@ -22,25 +21,30 @@ import fluxx_Players.Player;
  */
 public class Table {
 	
+	static int num_ID=1;
+	
 	/*
 	 * **************** GENERIC ATTRIBUTES OF TABLE ************************
 	 */
-	private int deckSize;
+	
+	private int tableID;
 	private Stack<Card> Deck;
 	
 	public int playsLeft;
 	public int drawsLeft;
 	
-	private Rule currentRule;
+	private Stack<Rule> currentRule;
 	private Goal currentGoal;
 	private ArrayList<Keeper> allKeepers;
 	private Stack<Card> discardedCards;
 	
 	public Table() {
+		this.setTableID(Table.num_ID++);
 		this.setDeck(new Stack<Card>());
+		this.setAllKeepers(new ArrayList<Keeper>());
+		this.setCurrentRule(new Stack<Rule>());
 		this.setDiscardedCards(new Stack<Card>());
-	}
-	
+	}	
 	
 
 	/*
@@ -49,20 +53,21 @@ public class Table {
 	
 	
 	/**
-	 * @return the deckSize
+	 * @return the tableID
 	 */
-	public int getDeckSize() {
-		return deckSize;
+	public int getTableID() {
+		return tableID;
 	}
+
 
 
 	/**
-	 * @param deckSize the deckSize to set
+	 * @param tableID the tableID to set
 	 */
-	public void setDeckSize(int deckSize) {
-		this.deckSize = deckSize;
+	public void setTableID(int tableID) {
+		this.tableID = tableID;
 	}
-
+	
 
 	/**
 	 * @return the deck
@@ -115,7 +120,7 @@ public class Table {
 	/**
 	 * @return the currentRule
 	 */
-	public Rule getCurrentRule() {
+	public Stack<Rule> getCurrentRule() {
 		return currentRule;
 	}
 
@@ -123,7 +128,7 @@ public class Table {
 	/**
 	 * @param currentRule the currentRule to set
 	 */
-	public void setCurrentRule(Rule currentRule) {
+	public void setCurrentRule(Stack<Rule> currentRule) {
 		this.currentRule = currentRule;
 	}
 
@@ -176,15 +181,16 @@ public class Table {
 		this.discardedCards = discardedCards;
 	}
 
-
-	/*
-	 * **************** UTILITY FUNCTIONS ************************
-	 */
-	
 	public int getRandomPosition(int min, int max) {
 	    return (int) ((Math.random() * (max - min)) + min);
 	}
 	
+	/*
+	 * Method shuffles the deck of cards
+	 * 
+	 *	@param	thisDeck	deck of cards
+	 * 	@return	same deck of cards after shuffling it
+	 */
 	public Stack<Card> shuffleDeck(Stack<Card> thisDeck){
 		
 		//To implement algorithm to randomly shuffle a given deck
@@ -201,21 +207,46 @@ public class Table {
 		return thisDeck;
 	}
 	
-	
+	/*
+	 * Method put the discarded cards back into the draw pile when the draw pile becomes empty
+	 * 
+	 *	@param	discarded	deck of discarded cards
+	 *	@param	current		deck of cards 
+	 * 	@return	current deck of cards after adding discarded cards into it
+	 */
 	public Stack<Card> resetDeck(Stack<Card> discarded, Stack<Card> current) {
 		return current=shuffleDeck(discarded);
 	}
 	
-	
+	/*
+	 * Method put a card into the discarded cards pile
+	 * 
+	 *	@param	thisCard	a card
+	 */
 	public void discard(Card thisCard){
 		this.getDiscardedCards().push(thisCard);
 	}
 	
-	public void dealCards(Stack<Card> currentDeck, int num_cards, Player thisPlayer) {
+	/*
+	 * Method a player draws cards from the draw pile. Those cards are removed from the draw pile
+	 * and added to the player's list of cards.
+	 * 
+	 *	@param	currentDeck	 draw pile
+	 *	@param	num_cards	 number of cards to be drawn from draw pile
+	 *	@param	thisPlayer	 an individual player
+	 */
+	public void drawCards(Stack<Card> currentDeck, int num_cards, Player thisPlayer) {
 		for(int i=0;i<num_cards;i++) {thisPlayer.getMyHand().add(currentDeck.pop());}
 	}
 	
-	public void dealCards(int index, ArrayList<Card> currentDeck, Player thisPlayer) {
+	/*
+	 * Method a player draws a particular card from the draw pile
+	 * 
+	 *	@param	index	 sequence number of a card in a deck of cards
+	 *	@param	currentDeck	 draw pile
+	 *	@param	thisPlayer	 an individual player
+	 */
+	public void drawCards(int index, ArrayList<Card> currentDeck, Player thisPlayer) {
 		thisPlayer.getMyHand().add(currentDeck.get(index));
 	}
 	
@@ -224,7 +255,7 @@ public class Table {
 	 * **************** INIT FUNCTIONS ************************
 	 */
 	
-	public Table initTable(Game thisGame, String filename) throws IOException {
+	public Table initTable(String filename, int n) throws IOException {
 		
 		/*
 		 * **************** Fetching All keeper Cards ************************
@@ -235,34 +266,88 @@ public class Table {
 			   while ((keeperName = br.readLine()) != null) {
 				   Keeper newKeeper = new Keeper();
 				   newKeeper.setItem(keeperName);
+				   this.getAllKeepers().add(newKeeper);
 				   this.getDeck().push(newKeeper);
 			   }
 			}
 		
-		/*
-		 * **************** Generating  Rule Cards ************************
-		 */
 		
 		/*
 		 * **************** Generating  Goals Cards ************************
 		 */
+		ArrayList<Keeper> tempKeepersList = this.getAllKeepers();
+	
+		for (int i = 0; i < tempKeepersList.size(); i++) {
+			
+			Goal thisGoal = new Goal();
+			int pos1=getRandomPosition(0,tempKeepersList.size()-1);
+			Keeper thisKeeper1 = tempKeepersList.get(pos1);
+			tempKeepersList.remove(pos1);
+			
+			int pos2=getRandomPosition(0,tempKeepersList.size()-1);
+			Keeper thisKeeper2 = tempKeepersList.get(pos2);
+			tempKeepersList.remove(pos2);
+			
+			thisGoal.getKeepers().add(thisKeeper1);
+			thisGoal.getKeepers().add(thisKeeper2);
+			this.getDeck().push(thisGoal);
+		}
 		
-		
-		
+				
 		/*
-		 * **************** Shuffling Deck x 5 times ************************
+		 * **************** Generating  Rule Cards ************************
 		 */
 		
+		// Single Draw Limit Rule Cards - 'n' times
+			for(int i =0; i< n;i++) {
+				
+			Rule newRule = new Rule(getRandomPosition(2,5),0,0,0);
+			this.getDeck().push(newRule);
+			
+			}
 		
+		// Single Play Limit Rule Cards - 'n' times
+				for(int i =0; i< n;i++) {
+					
+				Rule newRule = new Rule(0,getRandomPosition(2,5),0,0);
+				this.getDeck().push(newRule);
+				
+			}
+		
+		// Single Play Limit Rule Cards - 'n' times
+				for(int i =0; i< n;i++) {
+					
+				Rule newRule = new Rule(0,0,getRandomPosition(2,5),0);
+				this.getDeck().push(newRule);
+				
+			}
+				
+		// Single Play Limit Rule Cards - 'n' times
+				for(int i =0; i< n;i++) {
+					
+				Rule newRule = new Rule(0,0,0,getRandomPosition(2,5));
+				this.getDeck().push(newRule);
+				
+			}		
+		
+		// Pairs of Rule cards (DrawLimit + KeeperLimit, etc.) are not implemented
 		
 		/*
-		 * **************** Basic Rule Card ************************
+		 * **************** Shuffling Deck x 15*n times ************************
 		 */
+		int count = 15*n;
+		while (count != 0) {
+			Deck = shuffleDeck(Deck);
+			count--;
+		}
 		
+		/*
+		 * **************** Add Basic Rule Card ************************
+		 */
+		Rule basicRule = new Rule(1,1,0,0);
+		this.getCurrentRule().push(basicRule);
 		
-		
-
-		return null;
+		return this;
 	}
 	
 }

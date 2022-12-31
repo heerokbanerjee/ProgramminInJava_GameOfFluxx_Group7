@@ -14,20 +14,20 @@ import fluxx_Players.Player;
  */
 public interface gameInterface {
 	
-	public void playCard(Card thisCard);
+	public void playCard(int tableID, Card thisCard);
 	
-	public void showKeepers(Table thisTable);
+	public void showKeepers(int tableID);
 	
-	public void showRules(Table thisTable);
+	public void showRules(int tableID);
 	
-	public void showGoals(Table thisTable);
+	public void showGoals(int tableID);
 	
-	public Table updateRules(Rule newRule, Table thisTable);
+	public Table updateRules(int tableID, Rule newRule);
 	
-	public Table updateGoals(Goal newGoal, Table thisTable);
+	public Table updateGoals(int tableID, Goal newGoal);
 	
 	public void nextTurn(Game thisGame);
 	
-	public Player checkWinner(Table thisTable);
+	public Player checkWinner(int tableID);
 
 }
