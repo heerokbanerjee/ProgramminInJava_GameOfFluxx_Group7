@@ -204,8 +204,11 @@ public class Game implements gameInterface, inputHandler {
 		Stack<Rule> clone = this.getAllTables().get(tableID).getCurrentRule();
 		Stack<Rule> popped= new Stack<Rule>();
 		boolean toSwap = false;
-		for(Rule tos = clone.pop(); clone.isEmpty();popped.push(tos)) {
-									
+		Rule tos;
+		
+		for(; !clone.isEmpty();popped.push(tos)) {
+			tos = clone.pop();
+			//System.out.println("TOS>> "+tos);
 			/*
 			 *  ALGORITHM FOR SINGLE RULES IN A 'RULE' CARD
 			 * 
@@ -487,9 +490,12 @@ public class Game implements gameInterface, inputHandler {
 		Stack<Rule> rules = thisGame.getAllTables().get(DEFAULT_TABLE_ID).getCurrentRule();
 		// add 1 draw limit card
 		thisGame.updateRules(DEFAULT_TABLE_ID, new Rule(3,0,0,0));
-		System.out.print(thisGame.showRules(DEFAULT_TABLE_ID));
+		//System.out.print(thisGame.showRules(DEFAULT_TABLE_ID));
+		System.out.println(rules);
 		thisGame.updateRules(DEFAULT_TABLE_ID, new Rule(4,0,0,0));
-		System.out.print(thisGame.showRules(DEFAULT_TABLE_ID));
+		System.out.println(rules);
+		thisGame.updateRules(DEFAULT_TABLE_ID, new Rule(0,2,0,0));
+		//System.out.print(thisGame.showRules(DEFAULT_TABLE_ID));
 		
 		//******************** Gameplay *****************************
 		//System.out.println("Enter the number of players: ");
