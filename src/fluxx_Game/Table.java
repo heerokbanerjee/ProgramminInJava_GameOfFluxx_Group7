@@ -29,10 +29,7 @@ public class Table {
 	
 	private int tableID;
 	private Stack<Card> Deck;
-	
-	public int playsLeft;
-	public int drawsLeft;
-	
+		
 	private Stack<Rule> currentRule;
 	private Goal currentGoal;
 	private ArrayList<Keeper> allKeepers;
@@ -85,37 +82,6 @@ public class Table {
 	}
 
 
-	/**
-	 * @return the playsLeft
-	 */
-	public int getPlaysLeft() {
-		return playsLeft;
-	}
-
-
-	/**
-	 * @param playsLeft the playsLeft to set
-	 */
-	public void setPlaysLeft(int playsLeft) {
-		this.playsLeft = playsLeft;
-	}
-
-
-	/**
-	 * @return the drawsLeft
-	 */
-	public int getDrawsLeft() {
-		return drawsLeft;
-	}
-
-
-	/**
-	 * @param drawsLeft the drawsLeft to set
-	 */
-	public void setDrawsLeft(int drawsLeft) {
-		this.drawsLeft = drawsLeft;
-	}
-
 
 	/**
 	 * @return the currentRule
@@ -124,6 +90,7 @@ public class Table {
 		return currentRule;
 	}
 
+	
 
 	/**
 	 * @param currentRule the currentRule to set
@@ -227,29 +194,6 @@ public class Table {
 		this.getDiscardedCards().push(thisCard);
 	}
 	
-	/*
-	 * Method a player draws cards from the draw pile. Those cards are removed from the draw pile
-	 * and added to the player's list of cards.
-	 * 
-	 *	@param	currentDeck	 draw pile
-	 *	@param	num_cards	 number of cards to be drawn from draw pile
-	 *	@param	thisPlayer	 an individual player
-	 */
-	public void drawCards(Stack<Card> currentDeck, int num_cards, Player thisPlayer) {
-		for(int i=0;i<num_cards;i++) {thisPlayer.getMyHand().add(currentDeck.pop());}
-	}
-	
-	/*
-	 * Method a player draws a particular card from the draw pile
-	 * 
-	 *	@param	index	 sequence number of a card in a deck of cards
-	 *	@param	currentDeck	 draw pile
-	 *	@param	thisPlayer	 an individual player
-	 */
-	public void drawCards(int index, ArrayList<Card> currentDeck, Player thisPlayer) {
-		thisPlayer.getMyHand().add(currentDeck.get(index));
-	}
-	
 	
 	/*
 	 * **************** INIT FUNCTIONS ************************
@@ -333,9 +277,9 @@ public class Table {
 		// Pairs of Rule cards (DrawLimit + KeeperLimit, etc.) are not implemented
 		
 		/*
-		 * **************** Shuffling Deck x 15*n times ************************
+		 * **************** Shuffling Deck x 1500*n times ************************
 		 */
-		int count = 15*n;
+		int count = 1500*n;
 		while (count != 0) {
 			Deck = shuffleDeck(Deck);
 			count--;

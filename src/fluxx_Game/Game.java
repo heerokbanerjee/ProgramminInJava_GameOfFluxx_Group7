@@ -29,6 +29,10 @@ public class Game implements gameInterface, inputHandler {
 	private ArrayList<Table> allTables;
 	private Player currentPlayer;
 	
+	
+	public int playsLeft;
+	public int drawsLeft;
+	
 	/*
 	 * **************** Constructor ************************
 	 */
@@ -97,6 +101,38 @@ public class Game implements gameInterface, inputHandler {
 		this.currentPlayer = currentPlayer;
 	}
 	
+	/**
+	 * @return the playsLeft
+	 */
+	public int getPlaysLeft() {
+		return playsLeft;
+	}
+
+
+	/**
+	 * @param playsLeft the playsLeft to set
+	 */
+	public void setPlaysLeft(int playsLeft) {
+		this.playsLeft = playsLeft;
+	}
+
+
+	/**
+	 * @return the drawsLeft
+	 */
+	public int getDrawsLeft() {
+		return drawsLeft;
+	}
+
+
+	/**
+	 * @param drawsLeft the drawsLeft to set
+	 */
+	public void setDrawsLeft(int drawsLeft) {
+		this.drawsLeft = drawsLeft;
+	}
+
+	
 	
 	/*
 	 * **************** Game Interface Implementation ************************
@@ -104,10 +140,13 @@ public class Game implements gameInterface, inputHandler {
 	@Override
 	public void playCard(int tableID, Card thisCard) {
 		// TODO Auto-generated method stub
-		
+				
 		if (thisCard instanceof Rule) {
 			//To implement
 			this.updateRules(tableID, (Rule) thisCard);
+			Rule currentRule = this.showRules(tableID);
+			this.setPlaysLeft(currentRule.getPlayLimit());
+			this.setDrawsLeft(currentRule.getDrawLimit());
 		}
 		
 		else if (thisCard instanceof Keeper) {
@@ -120,14 +159,11 @@ public class Game implements gameInterface, inputHandler {
 			this.updateGoals(tableID, (Goal) thisCard);
 		}
 		
-		// check if plays left
-		
-		
 	}
 
 	@Override
 	public void showKeepers(int tableID) {
-		// TODO Auto-generated method stub
+		
 		System.out.println("------ All Keeper Cards on the Table -------");
 		
 		for(Player thisPlayer: this.getAllPlayers()) {
@@ -138,9 +174,20 @@ public class Game implements gameInterface, inputHandler {
 	}
 
 	@Override
-	public void showRules(int tableID) {
-		// TODO Auto-generated method stub
-		System.out.print(this.getAllTables().get(tableID).getCurrentRule());
+	public Rule showRules(int tableID) {
+		//Finding the max of each limit for all rule cards in stack
+		Stack<Rule> rules = this.getAllTables().get(tableID).getCurrentRule();
+		int play=0,draw=0,hand=0,keep=0;
+		for(Rule thisRule: rules) {
+			
+			if(thisRule.getPlayLimit()>play) play=thisRule.getPlayLimit();
+			if(thisRule.getDrawLimit()>draw) draw=thisRule.getDrawLimit();
+			if(thisRule.getHandLimit()>hand) hand=thisRule.getHandLimit();
+			if(thisRule.getKeeperLimit()>keep) keep=thisRule.getKeeperLimit();
+		}
+		
+		Rule currentRule = new Rule(draw,play,keep,hand);		
+		return currentRule;
 	}
 
 	@Override
@@ -156,25 +203,33 @@ public class Game implements gameInterface, inputHandler {
 		// TODO Auto-generated method stub
 		Stack<Rule> clone = this.getAllTables().get(tableID).getCurrentRule();
 		Stack<Rule> popped= new Stack<Rule>();
-		
+		boolean toSwap = false;
 		for(Rule tos = clone.pop(); clone.isEmpty();popped.push(tos)) {
-			
+									
 			/*
 			 *  ALGORITHM FOR SINGLE RULES IN A 'RULE' CARD
 			 * 
 			 */ 
 			
-			boolean toSwap = false;
-			
 			//if TOS is Basic Rule Card
 			if((tos.getDrawLimit()==1 && tos.getPlayLimit()==1) ) {
 				//if(newRule.getDrawLimit()!=0 || newRule.getPlayLimit()!=0)
+				clone.push(tos);
 				clone.push(newRule);
+				
 			}
 			
-			if(tos.getHandLimit()!=0 && newRule.getHandLimit()!=0) {toSwap=true;}
-			if(tos.getKeeperLimit()!=0 && newRule.getKeeperLimit()!=0) {toSwap=true;}
-			
+			else if(tos.getHandLimit()!=0 && newRule.getHandLimit()!=0) {
+				toSwap=true;}
+			else if(tos.getKeeperLimit()!=0 && newRule.getKeeperLimit()!=0) {
+				toSwap=true;}
+			else if(tos.getPlayLimit()!=0 && newRule.getPlayLimit()!=0) {
+				toSwap=true;}
+			else if(tos.getDrawLimit()!=0 && newRule.getDrawLimit()!=0) {
+				toSwap=true;}
+			else {
+				continue;
+			}
 			
 			/*
 			 *  ALGORITHM FOR TWO PAIRS OF RULES IN A 'RULE' CARD (UNTESTED)
@@ -200,24 +255,23 @@ public class Game implements gameInterface, inputHandler {
 			
 			// check for swap or to push
 			if(toSwap==true) {
-				
-				Rule toDiscard= this.getAllTables().get(tableID).getCurrentRule().pop();
-				this.getAllTables().get(tableID).discard(toDiscard);
+				this.getAllTables().get(tableID).discard(tos);
 				clone.push(newRule);
 				break;
 			}
-				
+			
+			if(clone.isEmpty()) {clone.push(newRule);}
+		
 			
 		}
 		
-		for(Rule poppy: popped)
-			clone.push(poppy);
+		//for(Rule poppy: popped)
+			//clone.push(poppy);
 		
 		
 		this.getAllTables().get(tableID).setCurrentRule(clone);
 		
-		
-		return null;
+		return this.getAllTables().get(tableID);
 	}
 
 	@Override
@@ -227,14 +281,42 @@ public class Game implements gameInterface, inputHandler {
 		return null;
 	}
 
-	@Override
-	public void nextTurn(Game thisGame) {
-		// TODO Auto-generated method stub
-		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(thisGame.getAllPlayers().indexOf(currentPlayer)+1));
-		//TO:DO initialize play_left + draws_left
+	/*
+	 * Method a player draws cards from the draw pile. Those cards are removed from the draw pile
+	 * and added to the player's list of cards.
+	 * 
+	 *	@param	currentDeck	 draw pile
+	 *	@param	num_cards	 number of cards to be drawn from draw pile
+	 *	@param	thisPlayer	 an individual player
+	 */
+	public void drawCards(Stack<Card> currentDeck, int num_cards, Player thisPlayer) {
+				
+		for(int i=0;i<num_cards;i++) {
+			this.drawCards(0,currentDeck,thisPlayer);
+			}
+	}
+	
+	/*
+	 * Method a player draws a particular card from the draw pile
+	 * 
+	 *	@param	index	 sequence number of a card in a deck of cards
+	 *	@param	currentDeck	 draw pile
+	 *	@param	thisPlayer	 an individual player
+	 */
+	public void drawCards(int index, Stack<Card> currentDeck, Player thisPlayer) {
 		
-		// check for hand limit and check for keeper limit
-		// ask current player to discard cards
+			thisPlayer.getMyHand().add(currentDeck.remove(index));
+	}
+	
+	@Override
+	public void nextTurn() {
+		// TODO Auto-generated method stub
+		this.setCurrentPlayer(this.getAllPlayers().get(this.getAllPlayers().indexOf(currentPlayer)+1));
+		
+		//re-initialize play_left && draws_left
+		Rule currentRule = this.showRules(DEFAULT_TABLE_ID);
+		this.setDrawsLeft(currentRule.getDrawLimit());
+		this.setPlaysLeft(currentRule.getPlayLimit());
 		return;
 	}
 
@@ -286,7 +368,7 @@ public class Game implements gameInterface, inputHandler {
 		for(Table thisTable: this.getAllTables()) {
 			
 			for(Player thisPlayer: this.getAllPlayers()) 
-				thisTable.drawCards(thisTable.getDeck(), num_dealCards, thisPlayer);				
+				this.drawCards(thisTable.getDeck(), num_dealCards, thisPlayer);				
 		}
 		
 		return this;
@@ -298,7 +380,6 @@ public class Game implements gameInterface, inputHandler {
 	 */
 	
 	public void handleInput(String input) throws FileNotFoundException, IOException{
-		
 		String[] commands = input.split(" ");	
 		
 		//Show help
@@ -317,10 +398,15 @@ public class Game implements gameInterface, inputHandler {
 			}
 			
 		//Show All keepers
+			if(input.matches("[S|s]how.*[A|a]ll.*[K|k]eeper.*")) {
+				this.showKeepers(DEFAULT_TABLE_ID);
+			}
 		
 		//Show Rules
 			if(input.matches("[S|s]how.*[R|r]ule.*")) {
-				this.showRules(DEFAULT_TABLE_ID);
+				Rule currentRule=this.showRules(DEFAULT_TABLE_ID);
+				System.out.println(">> The current rules of the game are: ");
+				System.out.println(currentRule);
 			}
 				
 		//Show Goals
@@ -330,10 +416,13 @@ public class Game implements gameInterface, inputHandler {
 		
 		//Play Card
 			if(input.matches("[P|p]lay.*[C|c]ard.*")) {
-				int pos=Integer.valueOf(commands[2])-1;
+				int pos;
+				try{pos=Integer.valueOf(commands[2])-1;}catch(Exception e) {pos=0;}
 				this.playCard(DEFAULT_TABLE_ID,this.getCurrentPlayer().getMyHand().get(pos));
 				this.getCurrentPlayer().playCard(pos);
 				
+				if(this.getPlaysLeft()!=0)
+					this.setPlaysLeft(this.getPlaysLeft()-1);
 			}
 		
 		//Discard Card
@@ -347,7 +436,13 @@ public class Game implements gameInterface, inputHandler {
 			if(input.matches("[D|d]raw.*[C|c]ard.*")) {
 				int num;
 				try{num=Integer.valueOf(commands[2]);}catch(Exception e) {num=1;}
-				this.getAllTables().get(DEFAULT_TABLE_ID).drawCards(this.getAllTables().get(DEFAULT_TABLE_ID).getDeck(), num, currentPlayer);
+				
+				if(this.getDrawsLeft()!=0) {
+					this.drawCards(this.getAllTables().get(DEFAULT_TABLE_ID).getDeck(), num, currentPlayer);
+					this.setDrawsLeft(this.getDrawsLeft()-1);
+				}
+				else
+					System.out.println(">> You cannot draw any more cards!");
 			}
 	}	
 	
@@ -382,20 +477,19 @@ public class Game implements gameInterface, inputHandler {
 		thisGame.getAllTables().get(DEFAULT_TABLE_ID).initTable("res/allKeepers.txt",10);
 		//System.out.print(thisGame.getTable().getDeck());
 		
-		// player 1 draws 3 cards
-		thisGame.getAllTables().get(DEFAULT_TABLE_ID).drawCards(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getDeck(), 3, thisGame.getCurrentPlayer());
-		
-		//System.out.print(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getCurrentRule());
-		//System.out.println(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getDeck());
+		// All players draws 3 cards
+		for(Player thisplayer: thisGame.getAllPlayers())
+		thisGame.drawCards(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getDeck(), 3,thisplayer);
 		
 		
-		// player 1 discards card number 2
-		//Card abc= thisGame.getCurrentPlayer().getMyHand().remove(2);
-		//thisGame.getAllTables().get(DEFAULT_TABLE_ID).discard(abc);
+		//**************** TEST FOR UPDATE RULES ****************
 		
-		
-		//System.out.print(thisGame.getTable().get(0).getDiscardedCards());
-		
+		Stack<Rule> rules = thisGame.getAllTables().get(DEFAULT_TABLE_ID).getCurrentRule();
+		// add 1 draw limit card
+		thisGame.updateRules(DEFAULT_TABLE_ID, new Rule(3,0,0,0));
+		System.out.print(thisGame.showRules(DEFAULT_TABLE_ID));
+		thisGame.updateRules(DEFAULT_TABLE_ID, new Rule(4,0,0,0));
+		System.out.print(thisGame.showRules(DEFAULT_TABLE_ID));
 		
 		//******************** Gameplay *****************************
 		//System.out.println("Enter the number of players: ");
@@ -403,8 +497,13 @@ public class Game implements gameInterface, inputHandler {
 
 		
 		while(thisGame.checkWinner(DEFAULT_TABLE_ID)==null){
+			System.out.println(" >> You have "+ thisGame.getDrawsLeft()+ " draws and "+thisGame.getPlaysLeft()+ " plays left!");
+			System.out.println("["+thisGame.getCurrentPlayer().getPlayerName()+"]>> ");
 			String input = ns.nextLine();
 			thisGame.handleInput(input);
+			
+			if(thisGame.getPlaysLeft()==0)
+				thisGame.nextTurn();
 			
 		}
 		
