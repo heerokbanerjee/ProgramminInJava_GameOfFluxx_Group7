@@ -559,7 +559,7 @@ public class Game implements gameInterface, inputHandler {
 		}
 		
 		System.out.println("********************* CONGRATULATIONS ***************************");
-		System.out.println(">> "+thisGame.checkWinner(DEFAULT_TABLE_ID)+" has won the game!!!");
+		System.out.println(">> "+thisGame.checkWinner(DEFAULT_TABLE_ID).getPlayerName()+" has won the game!!!");
 		
 	}
 
