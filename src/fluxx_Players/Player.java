@@ -5,7 +5,7 @@ package fluxx_Players;
 
 import fluxx_Cards.Card;
 import fluxx_Cards.Keeper;
-import fluxx_Game.Game;
+import fluxx_Game.GameLogic;
 import fluxx_Game.inputHandler;
 
 import java.io.FileNotFoundException;

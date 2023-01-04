@@ -21,7 +21,7 @@ import fluxx_Players.Player;
  * @author hermes
  *
  */
-public class Game implements gameInterface, inputHandler {
+public class GameLogic implements gameInterface, inputHandler {
 	
 	public static final int MAX_ALLOWED_PLAYERS=6;
 	public static final int DEFAULT_TABLE_ID = 0;
@@ -36,7 +36,7 @@ public class Game implements gameInterface, inputHandler {
 	/*
 	 * **************** Constructor ************************
 	 */
-	public Game() {
+	public GameLogic() {
 		this.setAllPlayers(new ArrayList<Player>());
 		this.setAllTables(new ArrayList<Table>());
 		this.setCurrentPlayer(null);
@@ -360,7 +360,7 @@ public class Game implements gameInterface, inputHandler {
 	 * **************** INIT FUNCTIONS ************************
 	 */
 	
-	public Game initGame(int num_tables, int num_players, int num_dealCards){
+	public GameLogic initGame(int num_tables, int num_players, int num_dealCards){
 				
 		/*
 		 * **************** Add Players to Game ************************
@@ -414,17 +414,17 @@ public class Game implements gameInterface, inputHandler {
 				
 				this.getCurrentPlayer().showHand();
 			}
+			
+		//Show All keepers
+		else if(input.matches("[S|s]how.*[A|a]ll.*[K|k]eeper.*")) {
+			
+			this.showKeepers(DEFAULT_TABLE_ID);
+		}
 		
 		//Show Keepers
 			else if(input.matches("[S|s]how.*[K|k]eeper.*")) {
 				
 				this.getCurrentPlayer().showKeepers();
-			}
-			
-		//Show All keepers
-			else if(input.matches("[S|s]how.*[A|a]ll.*[K|k]eeper.*")) {
-				
-				this.showKeepers(DEFAULT_TABLE_ID);
 			}
 		
 		//Show Rules
@@ -498,7 +498,7 @@ public class Game implements gameInterface, inputHandler {
 		
 		//******************** Introduction to Game *************************
 		
-		Game thisGame = new Game();
+		GameLogic thisGame = new GameLogic();
 		thisGame.printFile("res/intro.txt");
 		
 		thisGame.addPlayer(new Player("Heerok"));
@@ -508,7 +508,7 @@ public class Game implements gameInterface, inputHandler {
 		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(0));
 		
 		thisGame.getAllTables().add(new Table());
-		thisGame.getAllTables().get(DEFAULT_TABLE_ID).initTable("res/animals.txt",10);
+		thisGame.getAllTables().get(DEFAULT_TABLE_ID).initTable("res/animals.txt.txt",10);
 		//System.out.print(thisGame.getTable().getDeck());
 		
 		// All players draws 3 cards
@@ -540,10 +540,10 @@ public class Game implements gameInterface, inputHandler {
 		goal.getKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(2));
 		thisGame.updateGoals(DEFAULT_TABLE_ID, goal);
 		
-		thisGame.getCurrentPlayer().getMyKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(1));
-		thisGame.getCurrentPlayer().getMyKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(2));
+		//thisGame.getCurrentPlayer().getMyKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(1));
+		//thisGame.getCurrentPlayer().getMyKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(2));
 		Player p1=thisGame.checkWinner(DEFAULT_TABLE_ID);
-		System.out.println(p1);
+		//System.out.println(p1);
 		
 		while(thisGame.checkWinner(DEFAULT_TABLE_ID)==null){
 			System.out.println("\n"+thisGame.getCurrentPlayer().getPlayerName()+" >> You have "+ thisGame.getDrawsLeft()+ " draws and "+thisGame.getPlaysLeft()+ " plays left!");

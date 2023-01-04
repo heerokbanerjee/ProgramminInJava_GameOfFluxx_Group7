@@ -1,100 +1,27 @@
-Aardvark
-Abyssinian
-Adelie Penguin
-Affenpinscher
-Afghan Hound
-African Bush Elephant
-African Civet
-African Clawed Frog
-African Forest Elephant
-African Palm Civet
-African Penguin
-African Tree Toad
-African Wild Dog
-Ainu Dog
-Airedale Terrier
-Akbash
-Akita
-Alaskan Malamute
-Albatross
-Aldabra Giant Tortoise
-Alligator
-Alpine Dachsbracke
-American Bulldog
-American Cocker Spaniel
-American Coonhound
-American Eskimo Dog
-American Foxhound
-American Pit Bull Terrier
-American Staffordshire Terrier
-American Water Spaniel
-Anatolian Shepherd Dog
-Angelfish
-Ant
-Anteater
-Antelope
-Appenzeller Dog
-Arctic Fox
-Arctic Hare
-Arctic Wolf
-Armadillo
-Asian Elephant
-Asian Giant Hornet
-Asian Palm Civet
-Asiatic Black Bear
-Australian Cattle Dog
-Australian Kelpie Dog
-Australian Mist
-Australian Shepherd
-Australian Terrier
-Avocet
-Axolotl
-Aye Aye
-Baboon
-Bactrian Camel
-Badger
-Balinese
-Banded Palm Civet
-Bandicoot
-Barb
-Barn Owl
-Barnacle
-Barracuda
-Basenji Dog
-Basking Shark
-Basset Hound
+Dog
+Cat
+Lizard
 Bat
-Bavarian Mountain Hound
-Beagle
+Snake
+Eagle
+Buffalo
+Horse
+Donkey
+Girraffe
+Lion
+Tiger
+Monkey
+Rat
+Snail
+Leopard
 Bear
-Bearded Collie
-Bearded Dragon
-Beaver
-Bedlington Terrier
-Beetle
-Bengal Tiger
-Bernese Mountain Dog
-Bichon Frise
-Binturong
-Bird
-Birds Of Paradise
-Birman
-Bison
-Black Bear
-Black Rhinoceros
-Black Russian Terrier
-Black Widow Spider
-Bloodhound
-Blue Lacy Dog
-Blue Whale
-Bluetick Coonhound
-Bobcat
-Bolognese Dog
-Bombay
-Bongo
-Bonobo
-Booby
-Border Collie
-Border Terrier
-Bornean Orang-utan
-Borneo Elephant
+Elephant
+Donkey
+Horse
+Fish
+shark
+mosquitto
+RhinoSauRAUS
+Panda
+
+
