@@ -1,5 +1,4 @@
 package fluxx_Game;
-
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.Stack;
@@ -20,70 +19,67 @@ public class GameOfFluxx extends GameLogic {
 		Scanner ns = new Scanner(System.in);
 		
 		
-		//******************** Intro *************************
+		//******************** Introduction *************************
 		
 		GameLogic thisGame = new GameLogic();
 		thisGame.printFile("res/intro.txt");
 		thisGame.printFile("res/help.txt");
 		
-		thisGame.addPlayer(new Player("Heerok"));
-		thisGame.addPlayer(new Player("Madhurima"));
-		thisGame.addPlayer(new Player("Lesley"));
-		thisGame.addPlayer(new Player("Simon"));
-		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(0));
+		//******************** Adding Players *************************
+		
+		int num_players=0;
+		System.out.println("\n>> Please enter the number of players in the game:");
+		for(num_players=ns.nextInt();(num_players>GameLogic.MAX_ALLOWED_PLAYERS || num_players==0);num_players=ns.nextInt()) {	
+			System.out.println("\n>> Maximum number of allowed players are upto : "+ GameLogic.MAX_ALLOWED_PLAYERS);
+			System.out.println(">> Enter a valid number of players in the game:");
+		}
+		for(int i=0;i<num_players;i++) {
+			String name;
+			Player newPlayer = new Player();
+			System.out.println(">> Enter name of Player#"+(i+1)+">> ");
+			name = ns.next();
+			newPlayer.setPlayerName(name);
+			thisGame.addPlayer(newPlayer);
+		}
+		
+		//******************** Initialize Tables - By Default 1 Table *************************
 		
 		thisGame.getAllTables().add(new Table());
 		thisGame.getAllTables().get(DEFAULT_TABLE_ID).initTable("res/animals.txt",10);
-		//System.out.print(thisGame.getTable().getDeck());
+		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(0));
 		
-		// All players draws 3 cards
+		// Deal 3 cards to each player
 		for(Player thisplayer: thisGame.getAllPlayers())
 		thisGame.drawCards(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getDeck(), 3,thisplayer);
 		
-		Rule currentRule = thisGame.showRules(DEFAULT_TABLE_ID);
-		thisGame.setPlaysLeft(currentRule.getPlayLimit());
-		thisGame.setDrawsLeft(currentRule.getDrawLimit());
+		// Setting play left + draws left
+		thisGame.setPlaysLeft(thisGame.showRules(DEFAULT_TABLE_ID).getPlayLimit());
+		thisGame.setDrawsLeft(thisGame.showRules(DEFAULT_TABLE_ID).getDrawLimit());
 		
-		//**************** TEST FOR UPDATE RULES ****************
-		
-				Stack<Rule> rules = thisGame.getAllTables().get(DEFAULT_TABLE_ID).getCurrentRule();
-				// add new rule cards
-				//thisGame.updateRules(DEFAULT_TABLE_ID, new Rule(0,0,4,0));
-				//System.out.print("Discarded >>"+thisGame.getAllTables().get(DEFAULT_TABLE_ID).getDiscardedCards());
-				//System.out.println("Stack:"+rules);
-				
-				
-		
-		//******************** Gameplay *****************************
-		//System.out.println("Enter the number of players: ");
-		//int num_players = ns.nextInt();
-
-				
-		//**************** TEST FOR UPDATE GOALS >> check for WINNER ****************
-		Goal goal = new Goal();
-		goal.getKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(1));
-		goal.getKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(2));
-		thisGame.updateGoals(DEFAULT_TABLE_ID, goal);
-		
-		//thisGame.getCurrentPlayer().getMyKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(1));
-		//thisGame.getCurrentPlayer().getMyKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(2));
-		Player p1=thisGame.checkWinner(DEFAULT_TABLE_ID);
-		//System.out.println(p1);
-		
+		// Just to help with nextLine() inconsistency in IDE console
+		System.out.println(">> Type 'help me' to review how to play the game! Press any key to continue ....");
+		ns.nextLine();
+		// Gameplay
 		while(thisGame.checkWinner(DEFAULT_TABLE_ID)==null){
+			//clear console with escape character
+			System.out.print("\033[H\033[2J");
+			System.out.flush();
+			
 			System.out.println("\n"+thisGame.getCurrentPlayer().getPlayerName()+" >> You have "+ thisGame.getDrawsLeft()+ " draws and "+thisGame.getPlaysLeft()+ " plays left!");
 			System.out.println("["+thisGame.getCurrentPlayer().getPlayerName()+"]>> ");
+			
 			String input = ns.nextLine();
 			thisGame.handleInput(input);
 			
 			if(thisGame.getPlaysLeft()==0) {
-				System.out.println("********* NEXT TURN *********");
+				System.out.println(">> ********* NEXT TURN *********");
 				thisGame.nextTurn();
-				System.out.println("********* PLEASE PASS THE DEVICE TO THE NEXT PLAYER >> " + thisGame.getCurrentPlayer().getPlayerName());
+				System.out.println(">> ********* PLEASE PASS THE DEVICE TO THE NEXT PLAYER >> " + thisGame.getCurrentPlayer().getPlayerName());
 			}
 		}
 		
-		System.out.println("********************* CONGRATULATIONS ***************************");
+		//End of Game
+		System.out.println("\n>>********************* CONGRATULATIONS ***************************");
 		System.out.println(">> "+thisGame.checkWinner(DEFAULT_TABLE_ID).getPlayerName()+" has won the game!!!");
 		
 	}

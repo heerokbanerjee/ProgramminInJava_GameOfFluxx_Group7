@@ -23,5 +23,9 @@ shark
 mosquitto
 RhinoSauRAUS
 Panda
-
-
+Penguin
+Polar Bear
+Parrot
+Ant
+Rat
+Flammingo
