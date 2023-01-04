@@ -1,8 +1,39 @@
-*********** Welcome to the Game of Fluxx ***************
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Welcome to the Game of Fluxx >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 *****
 *****     This game is a text-based version of the classical card game 'Fluxx'.
-*****     There are two actions you can perform: "Play" or "Draw" a card.
 *****     There are 3 types of cards in this game: 
-*****     (1) Rule Cards : 
-*****     (2) Goal Cards :
-*****     (3) Keeper Cards :
+*****
+*****     (1) Rule Cards 	>> 		These cards dictate the rules that you have to follow by while playing the game.
+*****	  							There are 4 types of cards in this Game:
+*****				
+*****			(a) Play Limit 		: This card dictates the number of cards an individual player can play in his/her turn. 
+*****
+*****			(b) Draw Limit 		: This card dictates the number of cards an individual player cab draw from a stack of
+*****							  	  cards present in a table.
+*****
+***** 			(c) Keeper Limit	: This card dictates the number of Keeper cards an individual player can keep on the table. 
+***** 								  if the number of keeper cards in the table for a player is more than the hand limit, then 
+*****								  the player must discard the remaining cards as per his/her choice.
+*****									
+*****			(d) Hand Limit	 	: This card dictates the number of cards an individual player cab keep on his/her hand. if 
+*****								  the number of cards in a player's hand is more than the current hand limit, then the player
+*****								  must discard the remaining cards  as per his/her choice.
+*****
+*****     (2) Keeper Card 	>>		These cards denotes an asset that you can keep in your hand or play in order to win the game.
+*****
+*****     (3) Goal Card		>>		These cards contain a list of 'Keeper' cards that a player must have possess to win the game.
+*****
+*****
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< HOW TO PLAY THE GAME? >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+*****
+*****    In the beginning, each player is given 3 cards. The game starts with the basic rule i.e. draw 1 card and play 1 card.  
+*****    Once a player has drawn 1 card and played 1 card, the player's turn ends. If a new rule card is played, it takes 
+*****	 effect immediately. New rules that override the basic rule, are placed overlapping the part they supersede. e.g. when 
+*****    the basic rule is in play and a player plays a new rule 'draw limit 2', then draw limit part of the basic rule 
+*****	 is overridden by the new rule 'Draw Limit 2' and the play limit part of the basic rule is retained as '1'. So, the new
+*****	 rule becomes - Draw 2 cards and play 1 card. There are 2 other types of rule cards - hand limit and keeper limit.
+***** 	 When any of these cards are played, these rules are added along with draw card and play limit rules.
+*****	 Keepers are needed to win the game. Once a player has played his/her keeper, the card should be placed in front of 
+*****	 the player. When a goal card is played, it becomes the goal of the game immediately and the previous goal, if any, 
+*****	 is discarded.Each goal has a different victory condition.  The game continues until someone meets the conditions of 
+*****	 the current goal.As soon as someone's collection of keepers matches the current goal, they win.
