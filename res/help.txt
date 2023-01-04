@@ -1,5 +1,10 @@
-*********** <List of Commands> ***************
+*********** <List of Input Commands for the user> ***************
 *****     
-*****     (1) Help : 
-*****     (2) Show Hand:
-*****     (3) Play Card <card_number> :
+*****     (1) Help : Displays all the input options available to the user
+*****     (2) Show Hand: Displays all the cards in a player's hand 
+*****     (3) Show Keeper: Displays keeper cards in a player's hand
+*****     (4) Show Rule: Displays the current rule in the game
+*****     (5) Show Goal: Displays the current goal in the game
+*****     (6) Draw Card: Allows a player to draw a card from the draw pile
+*****     (7) Play Card <card_number> : A player plays a card from his/her hand by selecting the card number
+*****     (8) Discard Card: Allows a player to discard a card from his/her hand

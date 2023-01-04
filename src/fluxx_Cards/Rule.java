@@ -53,11 +53,12 @@ public class Rule extends Card {
 	@Override
 	public String toString() {
 	    StringJoiner newRule = new StringJoiner("\n");
-	    if(this.getDrawLimit()==1 && this.getPlayLimit()==1)
+	    //if this card is a Basic Rule card
+	    if(this.getDrawLimit()==1 && this.getPlayLimit()==1 && this.getHandLimit()==0 && this.getKeeperLimit()==0)
 	    {
 	    	newRule.add("[Basic Rule Card]");
-	    	newRule.add("Draw Limit : 1");
-	    	newRule.add("Play Limit : 1");
+	    	newRule.add("Draw Limit : "+this.getDrawLimit());
+	    	newRule.add("Play Limit : "+this.getPlayLimit());
 	    	return newRule.toString();
 	    }
 	    else {
