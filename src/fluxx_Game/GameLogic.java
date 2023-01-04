@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Stack;
 
 import fluxx_Cards.Card;
@@ -25,8 +24,8 @@ public class GameLogic implements gameInterface, inputHandler {
 	
 	public static final int MAX_ALLOWED_PLAYERS=6;
 	public static final int DEFAULT_TABLE_ID = 0;
-	public static int playsLeft;
-	public static int drawsLeft;
+	public int playsLeft;
+	public int cardsDrawn;
 	
 	private ArrayList<Player> allPlayers;
 	private ArrayList<Table> allTables;
@@ -40,6 +39,8 @@ public class GameLogic implements gameInterface, inputHandler {
 		this.setAllPlayers(new ArrayList<Player>());
 		this.setAllTables(new ArrayList<Table>());
 		this.setCurrentPlayer(null);
+		this.setCardsDrawn(0);
+		this.setPlaysLeft(0);
 	}
 	/*
 	 * **************** Getters & Setters ************************
@@ -116,24 +117,21 @@ public class GameLogic implements gameInterface, inputHandler {
 		this.playsLeft = playsLeft;
 	}
 
-
+	
 	/**
-	 * @return the drawsLeft
+	 * @return the cardsDrawn
 	 */
-	public int getDrawsLeft() {
-		return drawsLeft;
+	public int getCardsDrawn() {
+		return cardsDrawn;
 	}
 
-
 	/**
-	 * @param drawsLeft the drawsLeft to set
+	 * @param cardsDrawn the cardsDrawn to set
 	 */
-	public void setDrawsLeft(int drawsLeft) {
-		this.drawsLeft = drawsLeft;
+	public void setCardsDrawn(int cardsDrawn) {
+		this.cardsDrawn = cardsDrawn;
 	}
 
-	
-	
 	/*
 	 * **************** Game Interface Implementation ************************
 	 */
@@ -145,10 +143,15 @@ public class GameLogic implements gameInterface, inputHandler {
 			//To implement
 			this.updateRules(tableID, (Rule) thisCard);
 			
-			// set play_limit & draw_limit as per newly added rule
+			// set play_limit as per newly added rule
 			Rule currentRule = this.showRules(tableID);
 			this.setPlaysLeft(currentRule.getPlayLimit());
-			this.setDrawsLeft(currentRule.getDrawLimit());
+			
+			//update cards drawn if thisCard is a DrawLimit card
+			if((currentRule.getDrawLimit() - this.getCardsDrawn())==0)
+				this.setCardsDrawn(this.getCardsDrawn());
+			else
+				this.setCardsDrawn((currentRule.getDrawLimit() - this.getCardsDrawn()));
 		}
 		
 		else if (thisCard instanceof Keeper) {
@@ -315,15 +318,20 @@ public class GameLogic implements gameInterface, inputHandler {
 			thisPlayer.getMyHand().add(currentDeck.remove(index));
 	}
 	
+	
+	/*
+	 * Method Changes the current player of the game to the next player
+	 * 
+	 */
 	@Override
 	public void nextTurn() {
 		// TODO Auto-generated method stub
 		try{this.setCurrentPlayer(this.getAllPlayers().get(this.getAllPlayers().indexOf(currentPlayer)+1));}
 		catch(IndexOutOfBoundsException e) {this.setCurrentPlayer(this.getAllPlayers().get(0));}
 		
-		//re-initialize play_left && draws_left
+		//re-initialize play_left && cards_drawn
 		Rule currentRule = this.showRules(DEFAULT_TABLE_ID);
-		this.setDrawsLeft(currentRule.getDrawLimit());
+		this.setCardsDrawn(0);
 		this.setPlaysLeft(currentRule.getPlayLimit());
 	}
 
@@ -355,46 +363,7 @@ public class GameLogic implements gameInterface, inputHandler {
 			   }
 			}
 	}	
-	
-	/*
-	 * **************** INIT FUNCTIONS ************************
-	 */
-	
-	public GameLogic initGame(int num_tables, int num_players, int num_dealCards){
-				
-		/*
-		 * **************** Add Players to Game ************************
-		 */
 		
-		for(int i =0; i<num_players;i++) {
-			Player newPlayer = new Player();
-			
-			this.addPlayer(newPlayer);
-		}
-		
-
-		/*
-		 * **************** Add Tables to Game ************************
-		 */
-		
-		for(Table thisTable: allTables) {
-			this.addTable(thisTable);
-		}
-		
-		/*
-		 * **************** Deal 'num_dealCards' Cards to each Player ************************
-		 */
-		
-		for(Table thisTable: this.getAllTables()) {
-			
-			for(Player thisPlayer: this.getAllPlayers()) 
-				this.drawCards(thisTable.getDeck(), num_dealCards, thisPlayer);				
-		}
-		
-		return this;
-	}
-	
-	
 	/*
 	 * **************** Input Handler Implementation *********************	
 	 */
@@ -464,13 +433,14 @@ public class GameLogic implements gameInterface, inputHandler {
 		
 		//Draw Cards
 			else if(input.matches("[D|d]raw.*[C|c]ard.*")) {
-			
+				
 				int num;
 				try{num=Integer.valueOf(commands[2]);}catch(Exception e) {num=1;}
 				
-				if(this.getDrawsLeft()!=0) {
+				if(this.getCardsDrawn()- this.showRules(DEFAULT_TABLE_ID).getDrawLimit()!=0) {
 					this.drawCards(this.getAllTables().get(DEFAULT_TABLE_ID).getDeck(), num, currentPlayer);
-					this.setDrawsLeft(this.getDrawsLeft()-1);
+					this.setCardsDrawn(this.getCardsDrawn()+1);
+					System.out.println("Cards Drawn >>"+ this.getCardsDrawn());
 				}
 				else
 					System.out.println(">> You cannot draw any more cards!");

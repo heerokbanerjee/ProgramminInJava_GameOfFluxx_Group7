@@ -1,13 +1,11 @@
 package fluxx_Game;
+
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Stack;
 
-import fluxx_Cards.Goal;
-import fluxx_Cards.Rule;
 import fluxx_Players.Player;
 
-public class GameOfFluxx extends GameLogic {
+public class GameOfFluxx extends GameLogic implements inputHandler {
 
 	public GameOfFluxx() {
 		super();
@@ -31,7 +29,7 @@ public class GameOfFluxx extends GameLogic {
 		System.out.println("\n>> Please enter the number of players in the game:");
 		for(num_players=ns.nextInt();(num_players>GameLogic.MAX_ALLOWED_PLAYERS || num_players==0);num_players=ns.nextInt()) {	
 			System.out.println("\n>> Maximum number of allowed players are upto : "+ GameLogic.MAX_ALLOWED_PLAYERS);
-			System.out.println(">> Enter a valid number of players in the game:");
+			System.out.println(">> Please enter a valid number of players in the game:");
 		}
 		for(int i=0;i<num_players;i++) {
 			String name;
@@ -52,25 +50,25 @@ public class GameOfFluxx extends GameLogic {
 		for(Player thisplayer: thisGame.getAllPlayers())
 		thisGame.drawCards(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getDeck(), 3,thisplayer);
 		
-		// Setting play left + draws left
+		// Set plays left to current Rule --> Basic Rule --> Play 1
 		thisGame.setPlaysLeft(thisGame.showRules(DEFAULT_TABLE_ID).getPlayLimit());
-		thisGame.setDrawsLeft(thisGame.showRules(DEFAULT_TABLE_ID).getDrawLimit());
 		
 		// Just to help with nextLine() inconsistency in IDE console
 		System.out.println(">> Type 'help me' to review how to play the game! Press any key to continue ....");
 		ns.nextLine();
+		
 		// Gameplay
 		while(thisGame.checkWinner(DEFAULT_TABLE_ID)==null){
 			//clear console with escape character
 			System.out.print("\033[H\033[2J");
 			System.out.flush();
 			
-			System.out.println("\n"+thisGame.getCurrentPlayer().getPlayerName()+" >> You have "+ thisGame.getDrawsLeft()+ " draws and "+thisGame.getPlaysLeft()+ " plays left!");
+			System.out.println("\n"+thisGame.getCurrentPlayer().getPlayerName()+" >> You have "+ (thisGame.showRules(DEFAULT_TABLE_ID).getDrawLimit()- thisGame.getCardsDrawn())+ " draws and "+thisGame.getPlaysLeft()+ " plays left!");
 			System.out.println("["+thisGame.getCurrentPlayer().getPlayerName()+"]>> ");
 			
 			String input = ns.nextLine();
 			thisGame.handleInput(input);
-			
+	
 			if(thisGame.getPlaysLeft()==0) {
 				System.out.println(">> ********* NEXT TURN *********");
 				thisGame.nextTurn();
@@ -78,7 +76,7 @@ public class GameOfFluxx extends GameLogic {
 			}
 		}
 		
-		//End of Game
+		//Winner of Game
 		System.out.println("\n>>********************* CONGRATULATIONS ***************************");
 		System.out.println(">> "+thisGame.checkWinner(DEFAULT_TABLE_ID).getPlayerName()+" has won the game!!!");
 		

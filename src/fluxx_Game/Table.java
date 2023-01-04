@@ -16,7 +16,7 @@ import fluxx_Cards.Rule;
 import fluxx_Players.Player;
 
 /**
- * @author hermes
+ * @author Madhurima
  *
  */
 public class Table {
