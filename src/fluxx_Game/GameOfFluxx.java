@@ -21,6 +21,7 @@ public class GameOfFluxx extends GameLogic implements inputHandler {
 		
 		GameLogic thisGame = new GameLogic();
 		thisGame.printFile("res/intro.txt");
+		thisGame.printFile("res/help.txt");
 		
 		//******************** Adding Players *************************
 		

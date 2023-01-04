@@ -440,7 +440,6 @@ public class GameLogic implements gameInterface, inputHandler {
 				if(this.getCardsDrawn()- this.showRules(DEFAULT_TABLE_ID).getDrawLimit()!=0) {
 					this.drawCards(this.getAllTables().get(DEFAULT_TABLE_ID).getDeck(), num, currentPlayer);
 					this.setCardsDrawn(this.getCardsDrawn()+1);
-					System.out.println("Cards Drawn >>"+ this.getCardsDrawn());
 				}
 				else
 					System.out.println(">> You cannot draw any more cards!");

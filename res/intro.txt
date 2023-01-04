@@ -37,3 +37,4 @@
 *****	 the player. When a goal card is played, it becomes the goal of the game immediately and the previous goal, if any, 
 *****	 is discarded.Each goal has a different victory condition.  The game continues until someone meets the conditions of 
 *****	 the current goal.As soon as someone's collection of keepers matches the current goal, they win.
+*****
