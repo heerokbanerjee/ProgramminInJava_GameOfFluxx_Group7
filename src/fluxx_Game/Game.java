@@ -170,7 +170,7 @@ public class Game implements gameInterface, inputHandler {
 		
 		for(Player thisPlayer: this.getAllPlayers()) {
 			System.out.print(thisPlayer.getPlayerName()+":: ");
-			System.out.print(thisPlayer.getMyKeepers());
+			System.out.println(thisPlayer.getMyKeepers());
 		}
 		
 	}
@@ -475,6 +475,9 @@ public class Game implements gameInterface, inputHandler {
 				else
 					System.out.println(">> You cannot draw any more cards!");
 			}
+			else {
+				System.out.println(">> \""+input+"\" is not a valid command. Please Type \"help me\" to review the list of recognized commands.");
+			}
 	}	
 	
 	/*
@@ -505,7 +508,7 @@ public class Game implements gameInterface, inputHandler {
 		thisGame.setCurrentPlayer(thisGame.getAllPlayers().get(0));
 		
 		thisGame.getAllTables().add(new Table());
-		thisGame.getAllTables().get(DEFAULT_TABLE_ID).initTable("res/allKeepers.txt",10);
+		thisGame.getAllTables().get(DEFAULT_TABLE_ID).initTable("res/animals.txt",10);
 		//System.out.print(thisGame.getTable().getDeck());
 		
 		// All players draws 3 cards
@@ -523,23 +526,40 @@ public class Game implements gameInterface, inputHandler {
 				//thisGame.updateRules(DEFAULT_TABLE_ID, new Rule(0,0,4,0));
 				//System.out.print("Discarded >>"+thisGame.getAllTables().get(DEFAULT_TABLE_ID).getDiscardedCards());
 				//System.out.println("Stack:"+rules);
+				
+				
 		
 		//******************** Gameplay *****************************
 		//System.out.println("Enter the number of players: ");
 		//int num_players = ns.nextInt();
 
+				
+		//**************** TEST FOR UPDATE GOALS >> check for WINNER ****************
+		Goal goal = new Goal();
+		goal.getKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(1));
+		goal.getKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(2));
+		thisGame.updateGoals(DEFAULT_TABLE_ID, goal);
+		
+		thisGame.getCurrentPlayer().getMyKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(1));
+		thisGame.getCurrentPlayer().getMyKeepers().add(thisGame.getAllTables().get(DEFAULT_TABLE_ID).getAllKeepers().get(2));
+		Player p1=thisGame.checkWinner(DEFAULT_TABLE_ID);
+		System.out.println(p1);
 		
 		while(thisGame.checkWinner(DEFAULT_TABLE_ID)==null){
-			System.out.println("\n>> You have "+ thisGame.getDrawsLeft()+ " draws and "+thisGame.getPlaysLeft()+ " plays left!");
+			System.out.println("\n"+thisGame.getCurrentPlayer().getPlayerName()+" >> You have "+ thisGame.getDrawsLeft()+ " draws and "+thisGame.getPlaysLeft()+ " plays left!");
 			System.out.println("["+thisGame.getCurrentPlayer().getPlayerName()+"]>> ");
 			String input = ns.nextLine();
 			thisGame.handleInput(input);
 			
 			if(thisGame.getPlaysLeft()==0) {
-				System.out.print("********* NEXT TURN *********");
+				System.out.println("********* NEXT TURN *********");
 				thisGame.nextTurn();
+				System.out.println("********* PLEASE PASS THE DEVICE TO THE NEXT PLAYER >> " + thisGame.getCurrentPlayer().getPlayerName());
 			}
 		}
+		
+		System.out.println("********************* CONGRATULATIONS ***************************");
+		System.out.println(">> "+thisGame.checkWinner(DEFAULT_TABLE_ID)+" has won the game!!!");
 		
 	}
 
